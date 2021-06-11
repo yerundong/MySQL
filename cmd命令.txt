@@ -1,0 +1,14 @@
+停止/启动服务（需要管理员身份）：net stop/start [serverName] 
+
+登录mysql服务：
+1.使用MySql Command Line Client，输入密码，但只限root用户
+
+2.使用cmd：mysql -h[hostName] -P[port] -u[userName] -p[password]
+  [password]可以不写明文，执行下文暗文输入
+  如果是本机登录，可省略 -h[hostName] -P[port]，如：mysql -u[userName] -p[password]
+  注：-h：host主机名；-P：port端口号；-u：user用户名；-p：密码
+  示例：
+	mysql -hlocalhost -P3306 -uroot -p
+	mysql -uroot -p
+   
+退出mysql服务：exit
