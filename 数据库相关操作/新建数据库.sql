@@ -1,58 +1,59 @@
-/*====´´½¨ÐÂµÄÊý¾Ý¿â£¬Ö÷¡¢¸¨ÎÄ¼þ×é£¬Ö÷¡¢¸¨¡¢ÈÕÖ¾ÎÄ¼þ====*/
-use master --Ö¸ÏòmasterÊý¾Ý¿â
-if exists(select * from sysdatabases where name= 'MyDB') --ÅÐ¶ÏÊÇ·ñ¸ÃÊý¾Ý¿âÒÑ´æÔÚ
-drop database MyDB --ÒÑ´æÔÚÔò½øÐÐÉ¾³ý
-go --Åú´¦Àí±êÖ¾
-create database MyDB --´´½¨ÃûÎªMyDBµÄÊý¾Ý¿â£¬Ä¬ÈÏ´´½¨primary×éºÍÒ»¸öÖ÷ÎÄ¼þ£¨ÃûÓëÊý¾Ý¿âÃûÍ¬£ºMyDB£©£¬ºÍÒ»¸öÈÕÖ¾ÎÄ¼þ£¨MyDB_log£©
-on primary --´´½¨Ö÷ÎÄ¼þ×éprimary(¹Ì¶¨µÄ)£¬ÖÁÉÙ´´½¨Ò»¸öÖ÷ÎÄ¼þ£¬²»¿ÉÎª¿Õ×é
-	--Ö÷ÎÄ¼þ1ÐÅÏ¢
+/*====åˆ›å»ºæ–°çš„æ•°æ®åº“ï¼Œä¸»ã€è¾…æ–‡ä»¶ç»„ï¼Œä¸»ã€è¾…ã€æ—¥å¿—æ–‡ä»¶====*/
+USE MASTER; -- æŒ‡å‘masteræ•°æ®åº“
+IF EXISTS(SELECT * FROM sysdatabases WHERE NAME= 'MyDB'); -- åˆ¤æ–­æ˜¯å¦è¯¥æ•°æ®åº“å·²å­˜åœ¨
+DROP DATABASE MyDB; -- å·²å­˜åœ¨åˆ™è¿›è¡Œåˆ é™¤
+go; -- æ‰¹å¤„ç†æ ‡å¿—
+CREATE DATABASE MyDB -- åˆ›å»ºåä¸ºMyDBçš„æ•°æ®åº“ï¼Œé»˜è®¤åˆ›å»ºprimaryç»„å’Œä¸€ä¸ªä¸»æ–‡ä»¶ï¼ˆåä¸Žæ•°æ®åº“ååŒï¼šMyDBï¼‰ï¼Œå’Œä¸€ä¸ªæ—¥å¿—æ–‡ä»¶ï¼ˆMyDB_logï¼‰
+ON PRIMARY -- åˆ›å»ºä¸»æ–‡ä»¶ç»„primary(å›ºå®šçš„)ï¼Œè‡³å°‘åˆ›å»ºä¸€ä¸ªä¸»æ–‡ä»¶ï¼Œä¸å¯ä¸ºç©ºç»„
+	-- ä¸»æ–‡ä»¶1ä¿¡æ¯
 (
-	name = 'MyDB_data1', --Ö÷ÎÄ¼þÂß¼­ÎÄ¼þÃû¡¾±ØÌî¡¿£¨Âß¼­ÎÄ¼þÃûÓëÎïÀíÎÄ¼þÃû×îºÃÒ»Ñù£¬ÒÔÃâ»ìÂÒ£©
-	filename = "D:\Êý¾Ý¿â\MyDB\MyDB_data1.mdf", --Ö÷ÎÄ¼þÎïÀíÎÄ¼þÃû£¨µØÖ·£©¡¾±ØÌî¡¿
-	size = 10mb, --Ö÷ÎÄ¼þ³õÊ¼´óÐ¡¡¾±ØÌî¡¿
-	maxsize = 500mb, --Ö÷ÎÄ¼þÔö³¤µÄ×î´óÖµ£¨Ä¬ÈÏÎª²»ÏÞÖÆ£©¡¾Ñ¡Ìî¡¿
-	filegrowth = 15% --Ö÷ÎÄ¼þÔö³¤ÂÊ£¨Ä¬ÈÏÎª1mb£©¡¾Ñ¡Ìî¡¿
-), --Ö÷ÎÄ¼þ×é½áÊø
-filegroup FG --´´½¨¸¨ÎÄ¼þ×éFG£¨¿É×Ô¶¨Òå£©£¬ÖÁÉÙ´´½¨Ò»¸ö¸¨ÎÄ¼þ£¬²»¿ÉÎª¿Õ×é
-	--¸¨ÎÄ¼þ1ÐÅÏ¢
+	NAME = 'MyDB_data1', -- ä¸»æ–‡ä»¶é€»è¾‘æ–‡ä»¶åã€å¿…å¡«ã€‘ï¼ˆé€»è¾‘æ–‡ä»¶åä¸Žç‰©ç†æ–‡ä»¶åæœ€å¥½ä¸€æ ·ï¼Œä»¥å…æ··ä¹±ï¼‰
+	filename = "D:\æ•°æ®åº“\MyDB\MyDB_data1.mdf", -- ä¸»æ–‡ä»¶ç‰©ç†æ–‡ä»¶åï¼ˆåœ°å€ï¼‰ã€å¿…å¡«ã€‘
+	size = 10mb, -- ä¸»æ–‡ä»¶åˆå§‹å¤§å°ã€å¿…å¡«ã€‘
+	maxsize = 500mb, -- ä¸»æ–‡ä»¶å¢žé•¿çš„æœ€å¤§å€¼ï¼ˆé»˜è®¤ä¸ºä¸é™åˆ¶ï¼‰ã€é€‰å¡«ã€‘
+	filegrowth = 15% -- ä¸»æ–‡ä»¶å¢žé•¿çŽ‡ï¼ˆé»˜è®¤ä¸º1mbï¼‰ã€é€‰å¡«ã€‘
+), -- ä¸»æ–‡ä»¶ç»„ç»“æŸ
+
+filegroup FG -- åˆ›å»ºè¾…æ–‡ä»¶ç»„FGï¼ˆå¯è‡ªå®šä¹‰ï¼‰ï¼Œè‡³å°‘åˆ›å»ºä¸€ä¸ªè¾…æ–‡ä»¶ï¼Œä¸å¯ä¸ºç©ºç»„
+	-- è¾…æ–‡ä»¶1ä¿¡æ¯
 (
-	name = 'MyDB_data_fg1', --¸¨ÎÄ¼þÂß¼­ÎÄ¼þÃû
-	filename = "D:\Êý¾Ý¿â\MyDB\MyDB_data_fg1.ldf",--¸¨ÎÄ¼þÎïÀíÎÄ¼þÃû£¨µØÖ·£©
-	size = 10mb, --¸¨ÎÄ¼þ³õÊ¼´óÐ¡
-	maxsize = 500mb, --¸¨ÎÄ¼þÔö³¤µÄ×î´óÖµ£¨ÈôÎ´ÆôÓÃ×ÔÔö³¤£¬ÔòÎÞÒâÒå£©
-	filegrowth = 0 --Î´ÆôÓÃÔö³¤ÂÊ£¨ËùÒÔÒ²¿É²»ÓÃÉèÖÃÎÄ¼þ×î´óÖµmaxsize£©
+	NAME = 'MyDB_data_fg1', -- è¾…æ–‡ä»¶é€»è¾‘æ–‡ä»¶å
+	filename = "D:\æ•°æ®åº“\MyDB\MyDB_data_fg1.ldf",-- è¾…æ–‡ä»¶ç‰©ç†æ–‡ä»¶åï¼ˆåœ°å€ï¼‰
+	size = 10mb, -- è¾…æ–‡ä»¶åˆå§‹å¤§å°
+	maxsize = 500mb, -- è¾…æ–‡ä»¶å¢žé•¿çš„æœ€å¤§å€¼ï¼ˆè‹¥æœªå¯ç”¨è‡ªå¢žé•¿ï¼Œåˆ™æ— æ„ä¹‰ï¼‰
+	filegrowth = 0 -- æœªå¯ç”¨å¢žé•¿çŽ‡ï¼ˆæ‰€ä»¥ä¹Ÿå¯ä¸ç”¨è®¾ç½®æ–‡ä»¶æœ€å¤§å€¼maxsizeï¼‰
 ),
-	--¸¨ÎÄ¼þ2ÐÅÏ¢
+	-- è¾…æ–‡ä»¶2ä¿¡æ¯
 (
-	name = 'MyDB_data_fg2',
-	filename = "D:\Êý¾Ý¿â\MyDB\MyDB_data_fg2.ldf",
+	NAME = 'MyDB_data_fg2',
+	filename = "D:\æ•°æ®åº“\MyDB\MyDB_data_fg2.ldf",
 	size = 10mb, 
 	filegrowth = 0
 ),
-filegroup FT --´´½¨¸¨ÎÄ¼þ×éFT£¨¿É×Ô¶¨Òå£©£¬ÖÁÉÙ´´½¨Ò»¸ö¸¨ÎÄ¼þ£¬²»¿ÉÎª¿Õ×é
-	--¸¨ÎÄ¼þ3ÐÅÏ¢
+filegroup FT -- åˆ›å»ºè¾…æ–‡ä»¶ç»„FTï¼ˆå¯è‡ªå®šä¹‰ï¼‰ï¼Œè‡³å°‘åˆ›å»ºä¸€ä¸ªè¾…æ–‡ä»¶ï¼Œä¸å¯ä¸ºç©ºç»„
+	-- è¾…æ–‡ä»¶3ä¿¡æ¯
 (
-	name = 'MyDB_data_ft1',
-	filename = "D:\Êý¾Ý¿â\MyDB\MyDB_data_ft1.ldf",
+	NAME = 'MyDB_data_ft1',
+	filename = "D:\æ•°æ®åº“\MyDB\MyDB_data_ft1.ldf",
 	size = 10mb, 
 	filegrowth = 0
 )
 
-log on --ÈÕÖ¾ÎÄ¼þ(ÈÕÖ¾ÎÄ¼þ²»ÊôÓÚÈÎºÎÎÄ¼þ×é)
-	--ÈÕÖ¾1ÐÅÏ¢
+LOG ON -- æ—¥å¿—æ–‡ä»¶(æ—¥å¿—æ–‡ä»¶ä¸å±žäºŽä»»ä½•æ–‡ä»¶ç»„)
+	-- æ—¥å¿—1ä¿¡æ¯
 (
-	name = "MyDB_log1", --ÈÕÖ¾ÎÄ¼þÂß¼­ÎÄ¼þÃû
-	filename = "D:\Êý¾Ý¿â\log\MyDB_log1.ldf",--ÈÕÖ¾ÎÄ¼þÎïÀíÎÄ¼þÃû£¨µØÖ·£©
-	size = 5mb, --ÈÕÖ¾ÎÄ¼þ³õÊ¼´óÐ¡
-	filegrowth = 0 --ÈÕÖ¾ÎÄ¼þÔö³¤ÂÊ
+	NAME = "MyDB_log1", -- æ—¥å¿—æ–‡ä»¶é€»è¾‘æ–‡ä»¶å
+	filename = "D:\æ•°æ®åº“\log\MyDB_log1.ldf",-- æ—¥å¿—æ–‡ä»¶ç‰©ç†æ–‡ä»¶åï¼ˆåœ°å€ï¼‰
+	size = 5mb, -- æ—¥å¿—æ–‡ä»¶åˆå§‹å¤§å°
+	filegrowth = 0 -- æ—¥å¿—æ–‡ä»¶å¢žé•¿çŽ‡
 ),
-	--ÈÕÖ¾2ÐÅÏ¢
+	-- æ—¥å¿—2ä¿¡æ¯
 (
-	name = "MyDB_log2",
-	filename = "D:\Êý¾Ý¿â\log\MyDB_log2.ldf",
+	NAME = "MyDB_log2",
+	filename = "D:\æ•°æ®åº“\log\MyDB_log2.ldf",
 	size = 5mb,
 	filegrowth = 0 
 )	
 go
 
-select * from sysdatabases --´Ómaster¿âÖÐµÄÏµÍ³±ísysdatabasesÖÐ¿ÉÒÔ²éµ½ÒÑ´´½¨µÄÊý¾Ý¿âMyDBµÄÐÅÏ¢
+SELECT * FROM sysdatabases -- ä»Žmasteråº“ä¸­çš„ç³»ç»Ÿè¡¨sysdatabasesä¸­å¯ä»¥æŸ¥åˆ°å·²åˆ›å»ºçš„æ•°æ®åº“MyDBçš„ä¿¡æ¯
