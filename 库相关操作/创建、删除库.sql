@@ -1,0 +1,11 @@
+CREATE DATABASE `testdb`;-- 创建数据库
+
+CREATE DATABASE IF NOT EXISTS `testdb`;
+
+USE `testdb`;
+
+DROP DATABASE `testdb`;-- 删除数据库
+
+SHOW DATABASES;
+
+SELECT DATABASE();
