@@ -39,3 +39,6 @@ mysql --V
   mysql -hlocalhost -P3306 -uroot -p
   mysql -uroot -p
   ```
+
+> 注意：登录服务后才可以使用sql命令
+

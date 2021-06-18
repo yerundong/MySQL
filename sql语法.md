@@ -1,65 +1,87 @@
-> ### 以下是登录MySQL服务之后的命令操作
+## 目录
 
+- [SQL语法规范](##SQL语法规范)
+- [库相关操作](##库相关操作)
+- [表相关操作](##表相关操作)
+- [数据相关操作](##数据相关操作)
+- [函数](##函数)
 
 
 
 ## SQL语法规范
 
-- 每条命令以“;”或“/g”结尾，建议用分号，图形界面不写也可以
+- sql语句以“;”或“/g”结尾，建议用分号
 
 - sql语句不区分大小写。通常关键字使用大写，库、表、列名使用小写
 
 - 转义符号：\
 
-  ### 引号
+- sql索引是从1开始，并非从0开始
 
-  - 若库、表、列名与关键字重复，可用反引号（着重号）``包住，用于区分；若不重复，可不写反引号
-  - 在标准 SQL中，字符串使用的是单引号包裹
-  - 大部分数据库都支持单引号和双引号的互换，但双引号不是标准不建议你使用，比如在Oracle中不支持双引号
-
-
-
-## 注释
-
-- 单行注释
-
-    ```sql
-    #单行注释
-    -- 单行注释，空格不能丢
-    ```
-
-- 多行注释
-
-      /*
-      多行注释
-      多行注释
-      多行注释
-      */
   
   
+- ###  引号
+  
+	- 若库、表、列名与关键字重复，可用反引号（着重号）``包住，用于区分；若不重复，可不写反引号
 
-**退出MySQL服务**
+	- 在标准 SQL中，字符串使用的是单引号包裹
 
-```sql
-EXIT;
-```
+	- 大部分数据库都支持单引号和双引号的互换，但双引号不是标准不建议你使用，比如在Oracle中不支持双引号
 
 
 
-**查看数据库版本，函数**
+- ### 	注释
 
-```sql
-select version();
-```
+	- 单行注释
+	
+	  ```sql
+	  #单行注释
+	  -- 单行注释，空格不能丢
+	  ```
+	
+	- 多行注释
+	
+	  ```sql
+	  /*
+	  多行注释
+	  多行注释
+	  多行注释
+	  */
+	  ```
 
-## 库相关命令
+
+
+## 无归纳操作
+
+- **退出MySQL服务**
+
+	```sql
+	EXIT;
+	```
+
+- **查看数据库管理系统版本，函数**
+
+	```sql
+	select version();
+	```
+
+
+
+## 库相关操作
 
 - 创建数据库
 
     ```sql
-    CREATE DATABASE dbName;
+    CREATE DATABASE dbName;-- 创建数据库，如果已存在则报错
+    CREATE DATABASE IF NOT EXISTS dbName;-- 创建数据库，如果已存在则不创建
     ```
+    
+- 选中数据库，改变当前数据库
 
+    ```sql
+    USE dbName;
+    ```
+    
 - 删除数据库
 
     ```sql
@@ -69,13 +91,7 @@ select version();
 - 显示所有数据库
 
     ```sql
-    SHOW DATABASE;
-    ```
-
-- 选中某个数据库进行操作，改变当前数据库
-
-    ```sql
-    USE dbName;
+    SHOW DATABASES;
     ```
 
 - 显示当前库，函数
@@ -84,7 +100,9 @@ select version();
     SELECT DATABASE();
     ```
 
-## 表相关命令
+
+
+## 表相关操作
 
 
 > 注意：若要操作表，必须先进入选中库
@@ -107,12 +125,20 @@ select version();
     );
     ```
 
+- 删除表
+
+    
+  
 - 查看表结构
 
     ```sql
     DESC tableName;
     DESCRIBE tableName;
     ```
+
+
+
+##　数据相关操作
 
 - 查询
 
@@ -133,7 +159,7 @@ select version();
     SELECT VERSION(); -- 函数
 
     SELECT fieldName AS alias; -- 给字段起别名
-    SELECT fieldName alias; -- 给字段起别名省略AS
+    SELECT fieldName alias; -- 省略AS，不建议
 
     SELECT DISTINCT fieldName FROM tableName;-- 去除重复的值
     #SELECT TOP 10 * FROM tableName -- 返回前10个
@@ -209,8 +235,8 @@ select version();
   _：代表任意一个字符
   
   ```sql
-  fieldName like '%a%';
-  fieldName like '_a%';
+  fieldName LIKE pattern;
+  如：fieldName LIKE '_a%';
   ```
   
   **注意：**
@@ -249,10 +275,95 @@ select version();
 
   组合查询是指条件查询与排序组合使用，这时条件查询先写，排序后写，顺序不能反，否则报错。
 
-  执行顺序是：先执行条件查询，后对查询结果排序。排序总是在最后的。
+  执行顺序是：先执行条件查询，后对查询结果排序。排序总是在最后做得。
 
   ```sql
    SELECT fieldName FROM tableName WHERE ... ORDER BY ...
   ```
 
+
+
+
+## 函数
+
+- 单行函数
+
+  SQL单行函数根据数据类型分为字符函数、数字函数、日期函数、转换函数，另外还有一些别的函数。
+
   
+
+  **字符函数**：
+
+  `UPPER()`  将查询的字符串小写转换为大写 
+
+  `LOWER()`  将查询的字符串大写转换为小写
+  `INITCAP()`  将查询的字符串首字母大写
+
+  `CONCAT(field1, field2...)` 字符串连接函数，参数可以是字段或常量，如：
+
+  ```sql
+  SELECT CONCAT(`first_name`, '.',`last_name`, '-', `salary`) AS 'name' FROM `employees`;
+  ```
+
+  `SUBSTR(string, start, count)` 字符串截取函数，start是截取起始索引，count是截取个数
+
+  `LENGTH()` 字符串长度函数
+
+  `LPAD(string, length, pattern)`  左填充函数，length是填充完的总长度，pattern是用来填充的字符串
+
+  `RPAD(string, length, pattern)  右填充函数，length是填充完的总长度，pattern是用来填充的字符串 `
+  
+  `TRIM()`	清除字符串前后空格
+  
+  `TRIM(pattern FROM string)`	若字符串前后是pattern，则清除
+  
+  `REPLACE(string, from, to)`	替换，将字符串中的from全部替换成to
+  
+  
+
+​		**数字函数：**
+
+​		`round(number[, precision])`	四舍五入，precision为精确度，不传默认为0；若precision>0，保留小数位；若precision<0，保留整数位，如-1是保留到十位；
+
+​		`TRUNCATE(number, precision)`	舍去位数，precision为精确度；若precision>0，舍去小数位；若precision<0，舍去整数位；
+
+​		`TRUNC(number, precision)`	Oracle用法
+
+​		`MOD(m, n)`	取模
+
+​		`RAND()`	生成随机数，[0,1)
+
+
+
+​		**日期函数：**
+
+
+
+​		**转换函数：**
+
+​		SQL中可以进行两种数据类型的转换，即隐式转换和显示转换。
+
+
+
+​		**通用函数：**
+
+​		`IFNULL(exp1, exp2)`	如果exp1为null，返回exp2，如果不为null，返回exp1
+
+​		`ISNULL(exp)`	如果exp为null，返回1，如果不为null，返回0
+
+​		`NULLIF(exp1, exp2)`	如果exp1 = ,exp2，返回null，否则返回exp1
+
+## 运算符
+
+算数运算符：+、-、*、/、%
+赋值运算符：= 
+逻辑运算符：and、or、not 	`注意：优先级：not > and > or`
+比较运算符：>、<、=、>=、<=、<>、!= 	`注意：!=非sql92标准` 
+连接运算符：+	
+
+**注意：**
+
+- null参与的任何数学运算，结果都为null
+- 不合数学规律的运算，结果都为null，如100/0
+
+​		
