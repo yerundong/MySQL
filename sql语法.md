@@ -14,7 +14,7 @@
 
 - sql语句不区分大小写。通常关键字使用大写，库、表、列名使用小写
 
-- 转义符号：\
+- 转义符号：\，自定义指定的转义符，比如自定义为$： ESCAPE '$';
 
 - sql索引是从1开始，并非从0开始
 
@@ -189,9 +189,11 @@
     (fieldName > 1000 or fieldName < 2000) and fieldName != 1024
     ```
 
-    **条件查询配合运算符：**
+    **配合条件查询的操作符：**
 
-    `=`  等于
+    `=`  等于，后面不能接null
+
+    `<=>`  安全等于，与=的区别：后面可以接普通类型的值和null
 
     `<> `或 `!=` 不等于
 
@@ -203,83 +205,86 @@
 
     `>=` 大于等于
 
-    `between a and b` 在两者之间，[a,b]之间
+    `not` 非
+  
+    `and` 且
+
+    `or` 或
+
+    `between a and b` 在两者之间，[a,b]之间，等同于`<= ... && ... >=`配合使用
+
+    `not between a and b`	不在两者之间
 
     ```sql
     fieldName BETWEEN 9500 AND 10000;
+    fieldName NOT BETWEEN 9500 AND 10000;
     ```
-
-    `not` 取非，可以与is和in配合
-
-    `is null `  为空
-
-    `is not null` 不为空
-
-    `and` 并且
-
-    `or` 或者
-
-    `in` 在多个值之中，是这些值之一即可满足条件
-
+  
+    `is null/is not null`  为空 / 不为空	`注意：sql中null不能使用=或!=来运算，需要使用is或is not，并且其他类型的数值不能使用is来判断`
+  
+    `in` 在多个值之中，是这些值之一即可满足条件	`注意：in不能使用通配符，且括号内部的数据类型需一致或兼容`
+  
     ```sql
     fieldName IN (10000,11000,12000); -- fieldName是10000或11000或12000
     ```
-
+  
     `not in` 不在多个值中，不是这些值之一
-
+  
     ```sql
     fieldName NOT IN (10000,11000,12000);
     ```
-
-    `like` 模糊查询
-
-    %：代表任意数量个字符，包括0个
-
-    _：代表任意一个字符
-
+  
+    `like` 模糊查询，一般和通配符配合使用
+  
+    %：通配符，代表任意数量个字符，包括0个
+  
+    _：通配符，代表任意一个字符
+  
     ```sql
     fieldName LIKE pattern;
     如：fieldName LIKE '_a%';
     ```
-
+  
     **注意：**
-
+  
     - 数据库中的null不能使用=进行衡量，只能使用is或is not，因为数据库中的null代表什么也没有，而不是一个值得类型
-
+  
     - and的优先级大于or，若要or先执行，需要加小括号()
-
+  
     
-
+  
   - **数据排序**
-
-    对查询结构进行排序输出
-
+  
+    ORDER BY字句
+  
+    对查询结构进行排序输出，ORDER BY字句一般放在查询语句的最后面
+  
     ```sql
      SELECT fieldName FROM tableName ORDER BY orderField ASC/DESC;
     ```
-
-    orderField：字段名称，或者列的序数（不建议），代表以该字段排序
-
+  
+    orderField：可以是字段名称，表达式、别名、列的序数（不建议），以此来指定排序项
+  
     ASC/DESC：升序\降序，默认是升序，ASC可省略
-
+  
     
-
-    多个字段排序：
-
+  
+    按多个字段排序：
+  
     ```sql
      SELECT fieldName FROM tableName ORDER BY orderField1 ASC/DESC, orderField2 ASC/DESC;
     ```
-
+  
     先按orderField1排序，orderField1相同，再按orderField2排序。
-
+  
     
-
+  
   - 组合查询
-
+  
     组合查询是指条件查询与排序组合使用，这时条件查询先写，排序后写，顺序不能反，否则报错。
-
+  
     执行顺序是：先执行条件查询，后对查询结果排序。排序总是在最后做得。
-
+  
     ```sql
      SELECT fieldName FROM tableName WHERE ... ORDER BY ...
     ```
@@ -291,7 +296,9 @@
 
 - #### **单行函数**
 
-  SQL单行函数根据数据类型分为字符函数、数字函数、日期函数、转换函数，另外还有一些别的函数。
+  将一组逻辑语句封装在方法体中，对外暴露方法名
+
+  SQL单行函数根据数据类型分为字符函数、数学函数、日期函数、流程控制函数，以及其他函数。
 
   
 
@@ -309,21 +316,29 @@
       SELECT CONCAT(`first_name`, '.',`last_name`, '-', `salary`) AS 'name' FROM `employees`;
       ```
 
-    - `SUBSTR(string, start, count)` 字符串截取函数，start是截取起始索引，count是截取个数
-    - `LENGTH()` 字符串长度函数
-    - `LPAD(string, length, pattern)`  左填充函数，length是填充完的总长度，pattern是用来填充的字符串
-    - `RPAD(string, length, pattern)  右填充函数，length是填充完的总长度，pattern是用来填充的字符串 `
-    - ``TRIM()`	清除字符串前后空格
+    - `SUBSTR/SUBSTRING(string, start, count)` 字符串截取函数，start是截取起始索引，count是截取个数
+    
+    - `INSTR(string, subString)`     寻找子字符串的第一次出现的索引，找不到返回0
+    
+    - `LENGTH()` 获取字符串字节数函数，utf8中汉字3个字节，字母一个字节
+    
+    - `LPAD(string, length, pattern)`  左填充函数，length是填充完的总长度，pattern是用来填充的字符串，如果length大于string长度，string将从左边开始截取，其余丢弃
+    
+    - `RPAD(string, length, pattern)`  右填充函数，length是填充完的总长度，pattern是用来填充的字符串 ，如果length大于string长度，string将从y左边开始截取，其余丢弃
+    
+    - `TRIM()`	清除字符串前后空格
+    
     - `TRIM(pattern FROM string)`	若字符串前后是pattern，则清除
+    
     - `REPLACE(string, from, to)`	替换，将字符串中的from全部替换成to
 
   
 
-  - **数字函数：**
+  - **数学函数：**
 
-      
-
-      - `round(number[, precision])`	四舍五入，precision为精确度，不传默认为0；若precision>0，保留小数位；若precision<0，保留整数位，如-1是保留到十位；
+      - `ROUND(number[, precision])`	四舍五入，precision为精确度，不传默认为0；若precision>0，保留小数位；若precision<0，保留整数位，如-1是保留到十位；
+      - `CEIL(number)` 向上取整
+      - `FOORL(number)` 向下取整
       - `TRUNCATE(number, precision)`	舍去位数，precision为精确度；若precision>0，舍去小数位；若precision<0，舍去整数位；
       - `TRUNC(number, precision)`	Oracle用法
       - `MOD(m, n)`	取模
@@ -333,7 +348,34 @@
 
   - **日期函数：**
 
+      MySQL 使用下列数据类型在数据库中存储日期或日期/时间值：
+
+      ```
+      DATE - 格式 YYYY-MM-DD
+      DATETIME - 格式: YYYY-MM-DD HH:MM:SS
+      TIMESTAMP - 格式: YYYY-MM-DD HH:MM:SS
+      YEAR - 格式 YYYY 或 YY
+      ```
+
       
+
+      - `NOW()`  获取系统的当前日期和时间，返回日期时间类型数据
+
+      - `SYSDATE`  跟 now() 类似，不同之处在于：now() 在执行开始时值就得到了， sysdate() 在函数执行时动态得到值
+
+      - `CURDATE()`  获取系统的当前日期
+
+      - `CURTIME()`  获取系统的当前时间
+
+      - `CURRENT_TIMESTAMP/CURRENT_TIMESTAMP()`  获得当前时间戳函数
+
+      - `YEAR(date)`   获取传入日期对象的年份，date必须是合法格式的日期或时间字符串
+
+      - `MONTH(date)`   获取传入日期对象的月份，date必须是合法格式的日期或时间字符串
+
+      - `MONTHNAME  `  获取传入日期对象的月份的英文名称，date必须是合法格式的日期或时间字符串
+
+        
 
   - **转换函数：**
       SQL中可以进行两种数据类型的转换，即隐式转换和显示转换。
@@ -379,7 +421,7 @@
       END
       ```
 
-- ### 分组函数（多行函数）
+- ### 分组函数（又称为统计函数、聚合函数、组函数）
 
   分组函函数是指多行数据经过函数处理，返回一行结果，并且可以通过不同的分组条件进行结果集的分组。
 
@@ -396,11 +438,13 @@
 
 - 赋值运算符：= 
 
-- 逻辑运算符：and、or、not 	`注意：优先级：not > and > or`
+- 逻辑运算符：and（&&）、or（||）、not（!） 	`注意：优先级：not > and > or；sql中建议使用英文逻辑运算符`
 
-- 比较运算符：>、<、=、>=、<=、<>、!= 	`注意：!=非sql92标准` 
+- 比较运算符：>、<、=、>=、<=、<>、!=	`注意：!=非sql92标准` 
 
 - 连接运算符：+	
+
+- 其他：like、between...and...、in、is null、is not null 
 
   
 
