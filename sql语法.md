@@ -59,7 +59,7 @@
 	EXIT;
 	```
 
-- **查看数据库管理系统版本，函数**
+- **查看数据库管理系统版本**
 
 	```sql
 	select version();
@@ -94,7 +94,7 @@
     SHOW DATABASES;
     ```
 
-- 显示当前库，函数
+- 显示当前库
 
     ```sql
     SELECT DATABASE();
@@ -375,6 +375,12 @@
 
       - `MONTHNAME  `  获取传入日期对象的月份的英文名称，date必须是合法格式的日期或时间字符串
 
+      - `STR_TO_DATE(string, format)`  string转date类型，format是string类型的格式符，如'%Y-%m-%d'
+
+      - `DATE_FORMAT(date, format)`  date转string类型，format是string类型的格式符，如'%Y-%m-%d'
+
+        ![](.\截图\日期格式符.png)
+
         
 
   - **转换函数：**
@@ -382,18 +388,21 @@
 
       
 
-  - **通用函数：**
-    - `IFNULL(exp1, exp2)`	如果exp1为null，返回exp2，如果不为null，返回exp1
-
-    - `ISNULL(exp)`	如果exp为null，返回1，如果不为null，返回0
-
-    - `NULLIF(exp1, exp2)`	如果exp1 = ,exp2，返回null，否则返回exp1
-
-      
-
   - **流程控制函数**	
 
-    - `case ...`
+    - IF函数
+    
+      类似于三元运算
+    
+      `IF(exp1, epx2, exp3)`  如果exp1为true，返回epx2，为false，返回exp3
+    
+      ```sql
+      
+      ```
+    
+      
+    
+    - CASE函数
     
         枚举用法:
     
@@ -408,7 +417,7 @@
       END
       ```
     
-        判断用法，类似于if...else，只会返回第一个符合条件的值，其他case被忽略：
+      判断用法，类似于if...else，只会返回第一个符合条件的值，其他case被忽略：
     
       ```sql
       CASE 
@@ -420,6 +429,21 @@
       	ELSE result
       END
       ```
+
+  - **其他函数：**
+    - `IFNULL(exp1, exp2)`	如果exp1为null，返回exp2，如果不为null，返回exp1
+
+    - `ISNULL(exp)`	如果exp为null，返回1，如果不为null，返回0
+
+    - `NULLIF(exp1, exp2)`	如果exp1 = ,exp2，返回null，否则返回exp1
+
+    - `DATABASE()`  查询当前库
+
+    - `VERSION()`  查询数据库管理系统版本
+
+    - `USER()`   查询当前登录用户
+
+      
 
 - ### 分组函数（又称为统计函数、聚合函数、组函数）
 

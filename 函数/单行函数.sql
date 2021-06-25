@@ -102,7 +102,9 @@ SELECT MIN
 
 SELECT CURRENT_TIMESTAMP, CURRENT_TIMESTAMP(); 
 
+SELECT STR_TO_DATE('09/19 2021', '%m/%d %Y');
 
+SELECT DATE_FORMAT(NOW(), '%Y年%m月%d日');
 
 #《其他函数》
 
@@ -114,6 +116,18 @@ SELECT NULLIF(1, 2);-- 1
 
 SELECT NULLIF(1, 1);-- null
 #SELECT decode(1, 1, 2,);
+
+USE myemployees;
+SELECT DATABASE();
+
+SELECT VERSION();
+
+SELECT USER();
+
+#流程函数
+
+
+SELECT IF(10 > 5, '大', '小');-- if函数
 
 #case第一种用法：
 SELECT 
