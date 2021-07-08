@@ -94,17 +94,23 @@ SELECT MONTH('1998/01/19');
 
 SELECT MONTHNAME('1998/01/19');
 
-SELECT DAY('1998/01/19');
+SELECT DAY(NOW());
+
+SELECT HOUR(NOW());
+
+SELECT MINUTE(NOW());
+
+SELECT SECOND(NOW());
 
 SELECT HOUR('1998/01/19');
-
-SELECT MIN
 
 SELECT CURRENT_TIMESTAMP, CURRENT_TIMESTAMP(); 
 
 SELECT STR_TO_DATE('09/19 2021', '%m/%d %Y');
 
 SELECT DATE_FORMAT(NOW(), '%Y年%m月%d日');
+
+SELECT DATEDIFF('2021-9-9', NOW());
 
 #《其他函数》
 
@@ -129,27 +135,24 @@ SELECT USER();
 
 SELECT IF(10 > 5, '大', '小');-- if函数
 
-#case第一种用法：
+#case第一种用法：充当表达式
 SELECT 
   `first_name`,
   CASE
     `salary` 
-    WHEN 7000 
-    THEN '柒仟'
-    WHEN 8000 
-    THEN '捌仟' 
-    WHEN 9000 
-    THEN '玖仟' 
-    WHEN 10000 
-    THEN '壹万' 
+    WHEN 7000 THEN '柒仟'
+    WHEN 8000 THEN '捌仟' 
+    WHEN 9000 THEN '玖仟'
+    WHEN 10000 THEN '壹万' 
     ELSE `salary` 
-  END AS '薪水' 
+  END 
+  AS '薪水' 
 FROM
-  `employees` ;
-  
+  `employees`;
   
 #case第二种用法：
-SELECT 
+SELECT
+  `first_name`,
   CASE
     WHEN `salary` > 10000 
     THEN '好多钱'

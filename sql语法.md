@@ -154,17 +154,23 @@
     SELECT fieldName FROM tableName; -- 查询单个字段
     SELECT fieldName1, fieldName2... FROM tableName; -- 查询多个字段
     SELECT * FROM tableName; -- 查询所有字段，效率低，不建议使用
-  
+
     SELECT 100; -- 常量值
     SELECT 'Tom'; -- 常量值
     SELECT 100*99; -- 表达式
     SELECT VERSION(); -- 函数
-  
+
     SELECT fieldName AS alias; -- 给字段起别名
     SELECT fieldName alias; -- 省略AS，不建议
-  
-    SELECT DISTINCT fieldName FROM tableName;-- 去除重复的值
+
+    
     #SELECT TOP 10 * FROM tableName -- 返回前10个
+    ```
+
+  - **去重查询**
+
+    ```sql
+    SELECT DISTINCT fieldName FROM tableName;-- 去除重复的值
     ```
 
   - **条件查询**
@@ -206,7 +212,7 @@
     `>=` 大于等于
 
     `not` 非
-  
+
     `and` 且
 
     `or` 或
@@ -219,75 +225,107 @@
     fieldName BETWEEN 9500 AND 10000;
     fieldName NOT BETWEEN 9500 AND 10000;
     ```
-  
+
     `is null/is not null`  为空 / 不为空	`注意：sql中null不能使用=或!=来运算，需要使用is或is not，并且其他类型的数值不能使用is来判断`
-  
+
     `in` 在多个值之中，是这些值之一即可满足条件	`注意：in不能使用通配符，且括号内部的数据类型需一致或兼容`
-  
+
     ```sql
     fieldName IN (10000,11000,12000); -- fieldName是10000或11000或12000
     ```
-  
+
     `not in` 不在多个值中，不是这些值之一
-  
+
     ```sql
     fieldName NOT IN (10000,11000,12000);
     ```
-  
+
     `like` 模糊查询，一般和通配符配合使用
-  
+
     %：通配符，代表任意数量个字符，包括0个
-  
+
     _：通配符，代表任意一个字符
-  
+
     ```sql
     fieldName LIKE pattern;
     如：fieldName LIKE '_a%';
     ```
-  
+
     **注意：**
-  
+
     - 数据库中的null不能使用=进行衡量，只能使用is或is not，因为数据库中的null代表什么也没有，而不是一个值得类型
-  
-    - and的优先级大于or，若要or先执行，需要加小括号()
-  
+  - and的优先级大于or，若要or先执行，需要加小括号()
+    - WHERE 关键字无法与分组函数一起使用。
+
     
-  
+
   - **数据排序**
-  
+
     ORDER BY字句
-  
+
     对查询结构进行排序输出，ORDER BY字句一般放在查询语句的最后面
-  
+
     ```sql
      SELECT fieldName FROM tableName ORDER BY orderField ASC/DESC;
     ```
-  
+
     orderField：可以是字段名称，表达式、别名、列的序数（不建议），以此来指定排序项
-  
+
     ASC/DESC：升序\降序，默认是升序，ASC可省略
-  
+
     
-  
+
     按多个字段排序：
-  
+
     ```sql
      SELECT fieldName FROM tableName ORDER BY orderField1 ASC/DESC, orderField2 ASC/DESC;
     ```
-  
+
     先按orderField1排序，orderField1相同，再按orderField2排序。
-  
+
     
-  
-  - 组合查询
-  
-    组合查询是指条件查询与排序组合使用，这时条件查询先写，排序后写，顺序不能反，否则报错。
-  
-    执行顺序是：先执行条件查询，后对查询结果排序。排序总是在最后做得。
-  
+
+    条件查询与排序组合使用时，这时条件查询先写，排序后写，顺序不能反，否则报错。
+
+    执行顺序是：执行条件查询，对查询结果排序（排序总是在最后做的）
+
     ```sql
      SELECT fieldName FROM tableName WHERE ... ORDER BY ...
     ```
+
+    注意：
+
+    - Mysql中，ORDER BY子句支持别名
+    - ORDER BY总是最后执行，所以总是对最终的数据源进行排序
+
+    
+
+  - **分组查询**
+
+    GROUP BY字句
+
+    根据一个或多个列对结果集进行分组，**需要与分组函数配合使用**。放在条件子句后面，排序子句前面。
+
+    执行顺序：执行条件查询，执行分组，每组数据执行分组函数，对查询结果排序
+
+    ```sql
+     SELECT 分组函数(...) FROM tableName WHERE ... GROUP BY fieldName ORDER BY ...
+     SELECT 分组函数(...) FROM tableName WHERE ... GROUP BY fieldName HAVING CONDITIONS ORDER BY ...
+     SELECT 分组函数(...) as alias FROM tableName WHERE ... GROUP BY alias HAVING alias... ORDER BY ...
+     SELECT 分组函数(...) FROM tableName WHERE ... GROUP BY fieldName1,fieldName2 -- 多个字段分组
+    ```
+
+    注意：
+
+    - HAVING子句与WHERE类似，WHERE用于筛选分组之前的数据，HAVING用于筛选分组之后的数据，筛选的数据源不同
+    - Mysql中，GROUP BY子句和HAVING子句支持别名
+    - 支撑单个、多个字段分组
+
+    
+
+  - **连接查询（又称多表查询、多表连接）**
+
+
 
 
 
@@ -357,7 +395,7 @@
       YEAR - 格式 YYYY 或 YY
       ```
 
-      
+      注意：以下date须是日期对象，或合法格式的时间字符串
 
       - `NOW()`  获取系统的当前日期和时间，返回日期时间类型数据
 
@@ -369,15 +407,25 @@
 
       - `CURRENT_TIMESTAMP/CURRENT_TIMESTAMP()`  获得当前时间戳函数
 
-      - `YEAR(date)`   获取传入日期对象的年份，date必须是合法格式的日期或时间字符串
+      - `YEAR(date)`   获取传入日期对象的年份
 
-      - `MONTH(date)`   获取传入日期对象的月份，date必须是合法格式的日期或时间字符串
+      - `MONTH(date)`   获取传入日期对象的月份
+
+      - `DAY(date)`   获取传入日期对象的日
+
+      - `HOUR(date)`   获取传入日期对象的时
+
+      - `MINUTE(date)`   获取传入日期对象的分
+
+      - `SECOND(date)`   获取传入日期对象的秒
 
       - `MONTHNAME  `  获取传入日期对象的月份的英文名称，date必须是合法格式的日期或时间字符串
 
       - `STR_TO_DATE(string, format)`  string转date类型，format是string类型的格式符，如'%Y-%m-%d'
 
       - `DATE_FORMAT(date, format)`  date转string类型，format是string类型的格式符，如'%Y-%m-%d'
+
+      - `DATEDIFF(date1, date2)`  返回两个日期之间的天数，一般date2<date1。
 
         ![](.\截图\日期格式符.png)
 
@@ -413,7 +461,7 @@
       	WHEN value2
       	THEN result2
       	...
-      	ELSE result
+      	ELSE resultN
       END
       ```
     
@@ -422,39 +470,63 @@
       ```sql
       CASE 
         WHEN condition1
-        THEN result1
+        THEN result1;
         WHEN condition2
-        THEN result2
+        THEN result2;
         ...
-      	ELSE result
+        ELSE resultN
       END
       ```
 
   - **其他函数：**
+    
     - `IFNULL(exp1, exp2)`	如果exp1为null，返回exp2，如果不为null，返回exp1
-
+    
     - `ISNULL(exp)`	如果exp为null，返回1，如果不为null，返回0
-
+    
     - `NULLIF(exp1, exp2)`	如果exp1 = ,exp2，返回null，否则返回exp1
-
+    
     - `DATABASE()`  查询当前库
-
+    
     - `VERSION()`  查询数据库管理系统版本
-
+    
     - `USER()`   查询当前登录用户
-
+    
       
 
 - ### 分组函数（又称为统计函数、聚合函数、组函数）
 
   分组函函数是指多行数据经过函数处理，返回一行结果，并且可以通过不同的分组条件进行结果集的分组。
 
-  - `COUNT(fieldName)`	计算该字段共有多少条数据，但是在查询中，并不会记录为null的数据
+  注意：
+  
+  ```
+  1.SUM、AVG函数专用于处理数字类型的数据，对于非数字类型的数据，虽然不会报错，但没有任何意义
+  2.MAX、MIN、COUNT可以处理任何类型的数据
+  3.如果函数参数为字段名，所有的函数都会忽略为NULL的数据
+  4.分组函数与单行函数一起查询字段，虽然不会报错，但毫无意义，除非是分组查询
+  ```
+  
+  - `COUNT(fieldName)`	计算该字段共有多少条非空数据，统计所有行数
+  
+    统计总行数：
+  
+    ```sql
+    COUNT(*) -- 只要这一行有一个值不为null就会被统计，一般被用来统计所有行数
+    COUNT(1)
+    COUNT(主键字段)
+    注意：COUNT(*)和COUNT(1)执行效率一样，这两者效率都好于COUNT(字段)，因为字段需要判断。统计总行数推荐使用COUNT(*)
+    ```
+  
   - `SUM(fieldName)`   求某个字段内的数据之和
+  
   - `MAX(fieldName)`   求某个字段的最大值，可以通过条件求取不同组内的最大值。
+  
   - `MIN(fieldName)`   求某个字段的最小值，可以通过条件求取不同组内的最小值。
+  
   - `AVG(fieldName)`   求某个字段的平均值
-  - 
+  
+    
 
 ## 运算符
 
