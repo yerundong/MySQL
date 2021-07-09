@@ -22,7 +22,7 @@
   
 - ###  引号
   
-	- 若库、表、列名与关键字重复，可用反引号（着重号）``包住，用于区分；若不重复，可不写反引号
+	- 若库、表、列名与关键字重复，可用反引号（着重号）``包住，用于区分；若不重复，可省略反引号
 
 	- 在标准 SQL中，字符串使用的是单引号包裹
 
@@ -48,22 +48,6 @@
 	  多行注释
 	  */
 	  ```
-
-
-
-## 无归纳操作
-
-- **退出MySQL服务**
-
-	```sql
-	EXIT;
-	```
-
-- **查看数据库管理系统版本**
-
-	```sql
-	select version();
-	```
 
 
 
@@ -154,15 +138,17 @@
     SELECT fieldName FROM tableName; -- 查询单个字段
     SELECT fieldName1, fieldName2... FROM tableName; -- 查询多个字段
     SELECT * FROM tableName; -- 查询所有字段，效率低，不建议使用
-
+    
     SELECT 100; -- 常量值
     SELECT 'Tom'; -- 常量值
     SELECT 100*99; -- 表达式
     SELECT VERSION(); -- 函数
-
+    
     SELECT fieldName AS alias; -- 给字段起别名
     SELECT fieldName alias; -- 省略AS，不建议
-
+    
+    SELECT fieldName FROM tableName AS alias;-- 给表起别名
+    SELECT fieldName FROM tableName alias;-- 省略AS，不建议
     
     #SELECT TOP 10 * FROM tableName -- 返回前10个
     ```
@@ -318,14 +304,51 @@
     注意：
 
     - HAVING子句与WHERE类似，WHERE用于筛选分组之前的数据，HAVING用于筛选分组之后的数据，筛选的数据源不同
-    - Mysql中，GROUP BY子句和HAVING子句支持别名
+    - MySQL中，GROUP BY子句和HAVING子句支持别名
     - 支撑单个、多个字段分组
 
     
 
   - **连接查询（又称多表查询、多表连接）**
 
+    从一张表中单独查询，称为单表查询。从多个表中查询字段，这种跨表查询，多张表联合起来查询数据，被称为连接查询。
 
+    如果a、b两张表进行连接查询没有任何条件限制，则a表的每一条数据会匹配b表的所有数据，若a、b表各有m、n条数据，最终会查询出m×n条数据。这种现象在数学中叫做**笛卡尔积现象**。
+
+    连接查询时加上限制条件（CONDITION），可以避免笛卡尔积现象。
+
+    ```SQL
+    #SQL92语法（不推荐）
+    SELECT a.field1, b.field2 FROM table1 AS a, table2 AS b WHERE CONDITION
+    
+    #SQL99语法（推荐）
+    SELECT a.field1, b.field2 FROM table1 AS a JOIN table2 AS b ON CONDITION
+    ```
+
+    **注意：**
+
+    - 在多表查询中，给表起别名可以起到书写简洁的目的
+    - 在多表查询中，最好给查询字段前加上表名或别名（a.field1, b.field2），提高查询效率
+    - 加上限制条件之后，表的匹配次数并没有减少，而是把不符合限制条件的数据去除了，但是减少了表的连接次数
+    - SQL92语法的限制条件占用了WHERE子句，与条件筛选糅杂一起，使得结构不清晰，所以更推荐SQL99语法
+
+    
+
+    **根据连接方式分类，连接查询可分为：**
+
+    - 内连接
+      - 等值连接
+      - 非等值连接
+      - 自连接
+    - 外连接
+      - 左外连接
+      - 右外连接
+      - 全外连接
+    - 交叉连接
+
+    
+
+    
 
 
 
@@ -484,7 +507,7 @@
     
     - `ISNULL(exp)`	如果exp为null，返回1，如果不为null，返回0
     
-    - `NULLIF(exp1, exp2)`	如果exp1 = ,exp2，返回null，否则返回exp1
+    - `NULLIF(exp1, exp2)`	如果exp1 = exp2，返回null，否则返回exp1
     
     - `DATABASE()`  查询当前库
     
