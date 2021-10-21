@@ -1,9 +1,5 @@
 #《字符函数》
 
-SELECT `job_id` FROM `jobs`;
-
-SELECT * FROM `employees`;
-
 SELECT LOWER(`job_id`) FROM `jobs`;-- 转小写
 
 SELECT UPPER(`first_name`) FROM `employees`;-- 转大写
