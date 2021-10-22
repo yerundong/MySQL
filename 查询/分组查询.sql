@@ -1,3 +1,4 @@
+USE myemployees;
 
 #分组查询（多个统计成一个值）
 SELECT ROUND(AVG(`salary`), 2) AS 平均薪水, `department_id` AS 部门 FROM `employees` GROUP BY `department_id`;
