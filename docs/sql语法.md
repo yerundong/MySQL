@@ -1,14 +1,22 @@
 ## 目录
 
 - [1 SQL语法规范](#1 SQL语法规范)
-
+  - [1.1  引号](#1.1  引号)
+  - [1.2 注释](#1.2 注释)
 - [2 库相关操作](#2 库相关操作)
-
 - [3 表相关操作](#3 表相关操作)
-
 - [4 查询](#4 查询)
+  - [4.1 基础查询](#4.1 基础查询)
+  - [4.2 条件查询](#4.2 条件查询)
+  - [4.3 数据排序](#4.3 数据排序)
+  - [4.4 分组查询](#4.4 分组查询)
+  - [4.5 连接查询](#4.5 连接查询)
+  - [4.6 子查询](#4.6 子查询)
+  - [4.7 分页查询](#4.7 分页查询)
+  - [4.8 联合查询](#4.8 联合查询)
 - [5 函数](#5 函数)
-
+  - [5.1 单行函数](#5.1 单行函数)
+  - [5.2 分组函数](#5.2 分组函数)
 - [6 运算符](#6 运算符)
 
 
@@ -102,7 +110,7 @@
 
     ```sql
     SHOW TABLES; -- 默认当前库
-    SHOW TABLES FROM dbName; -- 若未进入任何库，不得省略from后面的
+    SHOW TABLES FROM dbName; -- 若未进入任何库，不得省略FROM后面的
     ```
 
 - 创建表
@@ -130,130 +138,102 @@
 
 # 4 查询
 
-## 4.1 简单查询
+## 4.1 基础查询
 
-    查询使用SELECT关键字。从表中查询数据，结果被存储在一个结果表中（称为结果集），结果表是一个虚拟的表格。
-    
-    SELECT只会查询，不会影响原表
-    
-    SELECT后面可以是字段名、常量值、表达式、函数
-    
-    ```sql
-    SELECT fieldName FROM tableName; -- 查询单个字段
-    SELECT fieldName1, fieldName2... FROM tableName; -- 查询多个字段
-    SELECT * FROM tableName; -- 查询所有字段，效率低，不建议使用
-    
-    SELECT 100; -- 常量值
-    SELECT 'Tom'; -- 常量值
-    SELECT 100*99; -- 表达式
-    SELECT VERSION(); -- 函数
-    
-    SELECT fieldName AS alias; -- 给字段起别名
-    SELECT fieldName alias; -- 省略AS，不建议
-    
-    SELECT fieldName FROM tableName AS alias;-- 给表起别名
-    SELECT fieldName FROM tableName alias;-- 省略AS，不建议
-    
-    #SELECT TOP 10 * FROM tableName -- 返回前10个
-    ```
+**关键字：**SELECT
 
-## 4.2 去重查询
+从表中查询数据，结果被存储在一个结果表中（称为结果集），结果表是一个虚拟的表格。
+
+SELECT只会查询，不会影响原表
+
+SELECT后面可以是字段名、常量值、表达式、函数
+
+
+
+**书写顺序：**
+
+SELECT > FROM > JOIN > ON > WHERE > GROUP BY > HAVING > ORDER BY > LIMIT
+
+**执行顺序：**
+
+FROM > JOIN > ON > WHERE > GROUP BY > HAVING > SELECT > ORDER BY > LIMIT
+
+
+
+**示例：**
 
 ```sql
-SELECT DISTINCT fieldName FROM tableName;-- 去除重复的值
+SELECT fieldName FROM tableName; -- 查询单个字段
+SELECT fieldName1, fieldName2... FROM tableName; -- 查询多个字段
+SELECT * FROM tableName; -- 查询所有字段，效率低，不建议使用
+
+SELECT 100; -- 常量值
+SELECT 'Tom'; -- 常量值
+SELECT 100*99; -- 表达式
+SELECT VERSION(); -- 函数
+
+SELECT fieldName AS alias; -- 给字段起别名
+SELECT fieldName alias; -- 省略AS，不建议
+
+SELECT fieldName FROM tableName AS alias;-- 给表起别名
+SELECT fieldName FROM tableName alias;-- 省略AS，不建议
+
+SELECT TOP 10 * FROM tableName -- 返回前10个
+
+SELECT DISTINCT fieldName FROM tableName;-- 去重查询，去除重复的值
 ```
 
-## 4.3 条件查询
+
+
+
+## 4.2 条件查询
 
 ```sql
 SELECT fieldName FROM tableName WHERE conditions;
 ```
 
-conditions由一个或多个condition组成，condition之间使用or或and连接，一个condition由字段、运算符、值组成。
+conditions由一个或多个condition组成，condition之间使用OR或AND连接，一个condition由字段、运算符、值组成。
+
+
 
 **condition：**
 
 ```sql
-fieldName = 1000
-fieldName >= 1000
-fieldName IS NULL
+fieldName = 1000;
+fieldName >= 1000;
+fieldName IS NULL;
+...
 ```
 
 **conditions：**
 
 ```sql
-(fieldName > 1000 or fieldName < 2000) and fieldName != 1024
+(fieldName > 1000 OR fieldName < 2000) AND fieldName != 1024;
+...
 ```
 
-**配合条件查询的操作符：**
 
-- `=`  等于，后面不能接null
 
-- `<=>`  安全等于，与=的区别：后面可以接普通类型的值和null
+**示例：**
 
-- `<> `或 `!=` 不等于
+```sql
+SELECT * FROM `user` WHERE `user_id` = 5;
+# 说明：设【无条件】的查询的结果集为m，依次循环m，设当前条设为c，则此处的`user_id`的所属为c
+ 
+SELECT * FROM `user` AS u WHERE u.`user_id` = 5;
+# 说明：此处的别名u代表是当前条数据，而非整个结果集
+```
 
-- `<` 小于
 
-- `<=` 小于等于
-
-- `>` 大于
-
-- `>=` 大于等于
-
-- `not` 非
-
-- `and` 且
-
-- `or` 或
-
-- `between a and b` 在两者之间，[a,b]之间，等同于`<= ... && ... >=`配合使用
-
-- `not between a and b`	不在两者之间
-
-  ```sql
-  fieldName BETWEEN 9500 AND 10000;
-  fieldName NOT BETWEEN 9500 AND 10000;
-  ```
-
-- `is null/is not null`  为空 / 不为空	`注意：sql中null不能使用=或!=来运算，需要使用is或is not，并且其他类型的数值不能使用is来判断`
-
-- `in` 在多个值之中，是这些值之一即可满足条件	`注意：in不能使用通配符，且括号内部的数据类型需一致或兼容`
-
-  ```sql
-  fieldName IN (10000,11000,12000); -- fieldName是10000或11000或12000
-  ```
-
-- `not in` 不在多个值中，不是这些值之一
-
-  ```sql
-  fieldName NOT IN (10000,11000,12000);
-  ```
-
-- `like` 模糊查询，一般和通配符配合使用
-
-- %：通配符，代表任意数量个字符，包括0个
-
-- _：通配符，代表任意一个字符
-
-  ```sql
-  fieldName LIKE pattern;
-  如：fieldName LIKE '_a%';
-  ```
-
-  
 
 **注意：**
 
-1. 数据库中的null不能使用=进行衡量，只能使用is或is not，因为数据库中的null代表什么也没有，而不是一个值的类型
-
-2. and的优先级大于or，若要or先执行，需要加小括号()
-
 3. WHERE 关键字无法与分组函数一起使用。
+2. 执行顺序：会先查询【无条件】的查询语句，再一条一条的去执行 WHERE 后面的条件把不符合的数据过滤掉
 
 
 
-## 4.4 数据排序
+## 4.3 数据排序
 
 **关键字：**ORDER BY字句
 
@@ -291,9 +271,9 @@ ORDER BY总是最后执行，所以总是对最终的数据源进行排序
 
 
 
-## 4.5 分组查询
+## 4.4 分组查询
 
-**关键字：**GROUP BY
+**关键字：**GROUP BY、HAVING
 
 根据一个或多个列对结果集进行分组，**需要与分组函数配合使用**。放在条件子句后面，排序子句前面。
 
@@ -302,7 +282,7 @@ ORDER BY总是最后执行，所以总是对最终的数据源进行排序
 ```sql
  SELECT 分组函数(...) FROM tableName WHERE ... GROUP BY fieldName ORDER BY ...
  SELECT 分组函数(...) FROM tableName WHERE ... GROUP BY fieldName HAVING CONDITIONS ORDER BY ...
- SELECT 分组函数(...) as alias FROM tableName WHERE ... GROUP BY alias HAVING alias... ORDER BY ...
+ SELECT 分组函数(...) AS alias FROM tableName WHERE ... GROUP BY alias HAVING alias... ORDER BY ...
  SELECT 分组函数(...) FROM tableName WHERE ... GROUP BY fieldName1,fieldName2 -- 多个字段分组
 ```
 
@@ -316,7 +296,9 @@ ORDER BY总是最后执行，所以总是对最终的数据源进行排序
 
 
 
-## 4.6 连接查询（又称多表查询、多表连接）
+## 4.5 连接查询
+
+又称多表查询、多表连接
 
 从一张表中单独查询，称为**单表查询**。从多个表中查询字段，这种跨表查询，多张表联合起来查询数据，被称为连接查询。
 
@@ -354,15 +336,15 @@ SELECT a.field1, b.field2 FROM 表1 AS a JOIN 表2 AS b ON 连接条件
 - 交叉连接
 ```
 
-### 4.6.1 内连接
+### 4.5.1 内连接
 
 内连接是指所有查询出的结果都是能够在连接的表中有对应记录的。
 
-**关键字：**（inner join），“inner”可以省略。
+**关键字：**（inner JOIN），“inner”可以省略。
 
 **内连接查询结果 = 主表和从表都有的记录**
 
-#### 4.6.1.1 等值连接
+#### 4.5.1.1 等值连接
 
 **概念：**在连接条件中使用等于号（=）运算符，其查询结果中列出被连接表中的所有列，包括其中的重复列。
 
@@ -374,7 +356,7 @@ FROM `employees` AS a JOIN `departments` AS b
 ON a.department_id = b.department_id;
 ```
 
-#### 4.6.1.2 非等值连接
+#### 4.5.1.2 非等值连接
 
 **概念：**在连接条件中使用除等于号之外运算符（>、<、<>、>=、<=、!>和!<等）
 
@@ -387,7 +369,7 @@ WHERE `salary` BETWEEN `lowest_sal` AND `highest_sal`
 ORDER BY `salary`
 ```
 
-#### 4.6.1.3 自连接
+#### 4.5.1.3 自连接
 
 **示例：**
 
@@ -397,11 +379,11 @@ FROM `employees` e, `employees` m
 WHERE e.`manager_id` = m.`employee_id`
 ```
 
-### 4.6.2 外连接
+### 4.5.2 外连接
 
 用于查询一个表中有，另一个表中没有的记录。
 
-#### 4.6.2.1 左外连接
+#### 4.5.2.1 左外连接
 
 **关键字：** LEFT JOIN
 
@@ -411,7 +393,10 @@ WHERE e.`manager_id` = m.`employee_id`
 
 1. 外连接查询的结果为主表中的所有记录
 2. 如果从表中有和它匹配的，则显示匹配的值
-3. 如果从表中没有和它匹配的，则显示null（所有从表字段都为null，一般使用主键=null来判定是否非匹配记录）
+3. 如果从表中没有和它匹配的，则显示NULL（所有从表字段都为NULL，一般使用主键等于NULL来判定是否非匹配记录）
+4. 必须有 ON 条件，否则报错
+
+
 
 示例：
 
@@ -423,7 +408,7 @@ LEFT JOIN `employees` AS e
 ON e.`department_id` = d.`department_id`
 ```
 
-#### 4.6.2.2 右外连接
+#### 4.5.2.2 右外连接
 
 效果和左外连接一样，只是主从表位置不同
 
@@ -438,7 +423,9 @@ RIGHT JOIN `departments` AS d
 ON e.`department_id` = d.`department_id`
 ```
 
-####  4.6.2.3 全外连接
+
+
+####  4.5.2.3 全外连接
 
 **概念：**返回左表和右表中的所有行。当某行在另一表中没有匹配行，则另一表中的列返回空值。
 
@@ -452,29 +439,93 @@ ON e.`department_id` = d.`department_id`
 
 
 
-### 4.6.3 交叉连接
+### 4.5.3 交叉连接
 
-关键字 CROSS JOIN
+**关键字：** CROSS JOIN
 
-概念：不带WHERE条件子句，它将会返回被连接的两个表的笛卡尔积，返回结果的 行数等于两个表行数的乘积
+**概念：**它将会返回被连接的两个表的笛卡尔积，返回结果的行数等于两个表行数的乘积。其实就是笛卡尔积的99语法写法。
 
-### 4.7 子查询
+**注意：**
+
+1. 交叉连接不带ON条件子句
+
+
+
+### 4.6 子查询
 
 **分类：**
 
 - 按子查询出现的位置：
-  - select后面：仅仅支持标量子查询
-  - where或having后面：✩
-    - 标量子查询（结果集只有一行一列）✩
-    - 列子查询（结果集只有一列多行）✩
-    - 行子查询（结果集只有一行多列）
-  - exists后面（相关子查询）
-    - 表子查询（结果集一般为多行多列）
+  - SELECT后面：仅仅支持标量子查询
+  - FROM后面
+  - JOIN/LEFT JOIN等后面
+  - WHERE或HAVING后面：✩
+    - 标量子查询✩
+    - 列子查询✩
+    - 行子查询
+  - EXISTS后面
+    - 表子查询
 - 按结果集的行列数不同：
-  - 标量子查询（结果集只有一行一列）
-  - 列子查询（结果集只有一列多行）
-  - 行子查询（结果集只有一行多列）
+  - 标量子查询（结果集为一行一列）
+  
+  - 列子查询（结果集为一列多行）
+  
+  - 行子查询（结果集为一行多列或多行多列）
+  
   - 表子查询（结果集一般为多行多列）
+  
+    
+
+**标量子查询搭配的操作符：**>、<、>=、<=、<>……
+
+**列子查询搭配的操作符：**IN、NOT IN、ANY/SOME、ALL
+
+
+
+**关联子查询（correlated subquery）：** 
+
+关联子查询和普通子查询的区别在于：
+
+1. 关联子查询引用了外部查询的列。 
+2. 执行顺序不同。对于**普通子查询，先执行子查询，再执行父查询**；而对于关联子查询，**先执行父查询，然后对所有通过过滤条件的记录执行内层子查询**。
+
+
+
+**注意：**
+
+1. 放在FROM后的子查询必需取别名，否则找不到该表，导致报错
+
+
+
+### 4.7 分页查询
+
+**关键字：**LIMIT
+
+**语法：**`LIMIT firstIndex, pageSize`，如果 firstIndex 是0，可以省略：`LIMIT pageSize`
+
+firstIndex 代表起始索引（**从0开始**），pageSize 代表分页数
+
+
+
+**注意：**
+
+1. LIMIT 关键字总是放置在最后，执行顺序也是最后
+
+
+
+### 4.8 联合查询
+
+**关键字：**UNION、UNION ALL
+
+**概念：**即把两次或多次查询结果合并起来。
+
+**注意：**
+
+1. UNION 用于合并两个或多个SELECT 语句的结果集，并消去表中任何重复行。
+2. UNION 内部的 SELECT 语句必须拥有相同数量的列，列也必须拥有相似的数据类型，列的顺序必须相同。
+3. UNION ALL不会消去重复行
+
+
 
 
 # 5 函数
@@ -487,7 +538,7 @@ SQL单行函数根据数据类型分为字符函数、数学函数、日期函�
 
 
 
-### 5.1.2 字符函数：
+### 5.1.2 字符函数
 
 - `UPPER()`  将查询的字符串小写转换为大写 
 
@@ -513,13 +564,13 @@ SQL单行函数根据数据类型分为字符函数、数学函数、日期函�
 
 - `TRIM()`	清除字符串前后空格
 
-- `TRIM(pattern FROM string)`	若字符串前后是pattern，则清除
+- `TRIM(pattern from string)`	若字符串前后是pattern，则清除
 
 - `REPLACE(string, from, to)`	替换，将字符串中的from全部替换成to
 
 
 
-### 5.1.3 数学函数：
+### 5.1.3 数学函数
 
 - `ROUND(number[, precision])`	四舍五入，precision为精确度，不传默认为0；若precision>0，保留小数位；若precision<0，保留整数位，如-1是保留到十位；
 - `CEIL(number)` 向上取整
@@ -531,7 +582,7 @@ SQL单行函数根据数据类型分为字符函数、数学函数、日期函�
 
 
 
-### 5.1.4 日期函数：
+### 5.1.4 日期函数
 
 MySQL 使用下列数据类型在数据库中存储日期或日期/时间值：
 
@@ -550,7 +601,7 @@ YEAR - 格式 YYYY 或 YY
 
 - `NOW()`  获取系统的当前日期和时间，返回日期时间类型数据
 
-- `SYSDATE`  跟 now() 类似，不同之处在于：now() 在执行开始时值就得到了， sysdate() 在函数执行时动态得到值
+- `SYSDATE`  跟 NOW() 类似，不同之处在于：NOW() 在执行开始时值就得到了， SYSDATE() 在函数执行时动态得到值
 
 - `CURDATE()`  获取系统的当前日期
 
@@ -582,7 +633,7 @@ YEAR - 格式 YYYY 或 YY
 
   
 
-### 5.1.5 转换函数：
+### 5.1.5 转换函数
 SQL中可以进行两种数据类型的转换，即隐式转换和显示转换。
 
 
@@ -625,13 +676,13 @@ SQL中可以进行两种数据类型的转换，即隐式转换和显示转换�
   END
   ```
 
-### 5.1.7 其他函数：
+### 5.1.7 其他函数
 
-- `IFNULL(exp1, exp2)`	如果exp1为null，返回exp2，如果不为null，返回exp1
+- `IFNULL(exp1, exp2)`	如果exp1为NULL，返回exp2，如果不为NULL，返回exp1
 
-- `ISNULL(exp)`	如果exp为null，返回1，如果不为null，返回0
+- `ISNULL(exp)`	如果exp为NULL，返回1，如果不为NULL，返回0
 
-- `NULLIF(exp1, exp2)`	如果exp1 = exp2，返回null，否则返回exp1
+- `NULLIF(exp1, exp2)`	如果exp1 = exp2，返回NULL，否则返回exp1
 
 - `DATABASE()`  查询当前库
 
@@ -658,12 +709,12 @@ SQL中可以进行两种数据类型的转换，即隐式转换和显示转换�
 
 **分组函数归纳：**
 
-- `COUNT(fieldName)`	计算该字段共有多少条非空数据，统计所有行数
+- `COUNT(fieldName)`	计算该字段共有多少条非空数据，统计所有行数。
 
   统计总行数：
 
   ```sql
-  COUNT(*) -- 只要这一行有一个值不为null就会被统计，一般被用来统计所有行数
+  COUNT(*) -- 只要这一行有一个值不为NULL就会被统计，一般被用来统计所有行数
   COUNT(1)
   COUNT(主键字段)
   注意：COUNT(*)和COUNT(1)执行效率一样，这两者效率都好于COUNT(字段)，因为字段需要判断。统计总行数推荐使用COUNT(*)
@@ -675,7 +726,7 @@ SQL中可以进行两种数据类型的转换，即隐式转换和显示转换�
 
 - `MIN(fieldName)`   求某个字段的最小值，可以通过条件求取不同组内的最小值。
 
-- `AVG(fieldName)`   求某个字段的平均值
+- `AVG(fieldName)`   求某个字段的平均值。
 
   
 
@@ -687,18 +738,83 @@ SQL中可以进行两种数据类型的转换，即隐式转换和显示转换�
 
 - 赋值运算符：= 
 
-- 逻辑运算符：and（&&）、or（||）、not（!） 	`注意：优先级：not > and > or；sql中建议使用英文逻辑运算符`
+- 逻辑运算符：AND（&&）、OR（||）、NOT（!） 
 
-- 比较运算符：>、<、=、>=、<=、<>、!=	`注意：!=非sql92标准` 
+- 比较运算符：>、<、=、>=、<=、<>、!=	**注意：!=非sql92标准**
 
 - 连接运算符：+	
 
-- 其他：like、between...and...、in、is null、is not null 
+- 其他：like、BETWEEN...AND...、IN、IS NULL、IS NOT NULL 
 
-  
+
+
+
+**运算符：**
+
+- `=` ：等于，后面不能接NULL
+
+- `<=>`：安全等于，与=的区别：后面可以接普通类型的值和NULL
+
+- `<> 或 !=`：不等于
+
+- `<`：小于
+
+- `<=`：小于等于
+
+- `>`：大于
+
+- `>=`：大于等于
+
+- `NOT`：非，搭配有：NOT IN、NOT BETWEEN、NOT LIKE、NOT EXISTS……
+
+- `AND`：且
+
+- `OR`：或
+
+- `BETWEEN a AND b`：在两者之间，[a, b]之间，等同于`SOME >= a && SOME <= b`
+
+- `NOT BETWEEN a AND b`：不在两者之间，等同于`SOME < a OR SOME > b`
+
+  ```sql
+  fieldName BETWEEN 9500 AND 10000;
+  fieldName NOT BETWEEN 9500 AND 10000;
+  ```
+
+- `IS NULL 或 IS NOT NULL` ：为空 / 不为空	
+
+- `IN`：用法：`IN (value1, value2, value3 ...) / IN (子查询)`，表示在多个值之中，是这些值之一即可满足条件	**注意：IN不能使用通配符，且括号内部的数据类型需一致或兼容**
+
+  ```sql
+  fieldName IN (10000, 11000, 12000); -- fieldName是10000或11000或12000
+  ```
+
+- `NOT IN`： 用法：`NOT IN (value1, value2, value3 ...) / NOT IN (子查询)`，表示不在多个值中，不是这些值之一
+
+  ```sql
+  fieldName NOT IN (10000,11000,12000);
+  ```
+
+- `LIKE`：模糊查询，一般配合通配符使用
+
+  - `%`：通配符，代表任意数量个字符，包括0个
+
+  - `_`：通配符，代表任意一个字符
+
+  ```sql
+  fieldName LIKE pattern;
+  如：fieldName LIKE '_a%';
+  ```
+
+- `ANY 或 SOME`：用于子查询，用法：`ANY(子查询)`，表示：父查询中的结果集【较胜于】子查询中任意一个结果集中的值，则为真，较胜于可以为大于、小于
+- `ALL`：用于子查询，用法：`ALL(子查询)`，表示：父查询中的结果集【较胜于】子查询中每一个结果集中的值，则为真，较胜于可以为大于、小于
+- `EXISTS`：用于子查询，用法：`EXISTS(子查询)`，表示：检查是否子查询的结果集存在值，有值返回1, 没值返回0
+- `NOT EXISTS`：不存在，与`EXISTS`相反
 
 **注意：**
 
-  - null参与的任何数学运算，结果都为null
-  - 不合数学规律的运算，结果都为null，如100/0
+  - NULL参与的任何数学运算，结果都为NULL
+  - 不合数学规律的运算，结果都为NULL，如100/0
+  - 数据库中的 NULL 不能使用=进行衡量，只能使用 IS 或IS NOT（因为数据库中的 NULL 代表什么也没有，而不是一个值的类型），并且其他类型的数值不能使用 IS  或IS NOT 来判断
+- AND的优先级大于OR，若要OR先执行，需要加小括号()
+- 优先级：NOT > AND > OR；sql中建议使用英文逻辑运算符
 
