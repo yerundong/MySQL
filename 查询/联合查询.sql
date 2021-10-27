@@ -24,7 +24,7 @@ SELECT *
 FROM `user`
 WHERE age >= 36
 
-# UNION ALL，将查询结果合并，不会消去重复行
+# UNION ALL将查询结果合并，不会消去重复行
 SELECT *
 FROM `user`
 WHERE age = 45
@@ -32,3 +32,7 @@ UNION ALL
 SELECT *
 FROM `user`
 WHERE age >= 36
+
+
+
+
