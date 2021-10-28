@@ -1,4 +1,4 @@
-#《字符函数》
+#=============================== 字符函数 ===============================#
 
 SELECT LOWER(`job_id`) FROM `jobs`;-- 转小写
 
@@ -41,7 +41,7 @@ SELECT TRIM('a' FROM 'abca李小aaa环abca');
 SELECT `first_name`, REPLACE(`first_name`, 'e', '*') AS 'REPLACE' FROM `employees`;
 
 
-#《数字函数》
+#=============================== 数字函数 ===============================#
 
 SELECT ROUND(12345.123456789);
 
@@ -64,7 +64,7 @@ SELECT RAND() FROM `employees`;
 
 SELECT ROUND(RAND() * 99 + 1) FROM `employees`;-- 1~100随机数
 
-#《日期函数》
+#=============================== 日期函数 ===============================#
 
 SELECT NOW();
 
@@ -108,7 +108,7 @@ SELECT DATE_FORMAT(NOW(), '%Y年%m月%d日');
 
 SELECT DATEDIFF('2021-9-9', NOW());
 
-#《其他函数》
+#=============================== 其他函数 ===============================#
 
 SELECT IFNULL(NULL*100, 0);
 
@@ -126,7 +126,7 @@ SELECT VERSION();
 
 SELECT USER();
 
-#流程函数
+#=============================== 流程函数 ===============================#
 
 
 SELECT IF(10 > 5, '大', '小');-- if函数

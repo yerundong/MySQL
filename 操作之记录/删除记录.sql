@@ -5,7 +5,7 @@ SELECT * FROM `user`;
 SELECT * FROM `location`;
 
 
-#******* 方式一：删除单表记录
+#=============================== 方式一：删除单表记录 ===============================#
 
 DELETE FROM `user` WHERE `user_id` = 24;
 
@@ -16,7 +16,7 @@ DELETE `user` FROM `user` WHERE `user_id` >= 29;
 DELETE u FROM `user` AS u WHERE `user_id` >= 29;
 
 
-#******* 方式一：删除多表关联记录
+#=============================== 方式一：删除多表关联记录 ===============================#
 
 # 案例：将所在城市的城市名含“北”，且姓“莫”的所有用户记录删除
 DELETE u
@@ -37,5 +37,10 @@ ON l.`location_id` = u.`location_id`
 WHERE u.`user_id` IS NULL
 AND l.`location_name` LIKE '%庆%';
 
+#=============================== 方式二：清空表 ===============================#
 
-TRUNCATE FROM
+USE `mydb`;
+
+TRUNCATE TABLE `pets_copy`;
+
+SELECT * FROM `pets_copy`;
