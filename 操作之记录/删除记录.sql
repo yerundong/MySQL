@@ -1,4 +1,4 @@
-USE test;
+USE test_db;
 
 SELECT * FROM `user`;
 
@@ -38,8 +38,6 @@ WHERE u.`user_id` IS NULL
 AND l.`location_name` LIKE '%庆%';
 
 #=============================== 方式二：清空表 ===============================#
-
-USE `mydb`;
 
 TRUNCATE TABLE `pets_copy`;
 

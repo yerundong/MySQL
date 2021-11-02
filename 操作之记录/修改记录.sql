@@ -1,4 +1,4 @@
-USE test;
+USE test_db;
 
 SELECT * FROM `user`;
 

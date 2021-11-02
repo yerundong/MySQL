@@ -1,4 +1,4 @@
-USE `test`;
+USE `test_db`;
 
 # 普通条件查询
 SELECT *

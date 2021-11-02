@@ -1,3 +1,5 @@
+USE `myemployees`;
+
 #条件查询
 
 SELECT * FROM `employees` WHERE `department_id` = 70;

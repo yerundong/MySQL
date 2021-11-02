@@ -1,3 +1,5 @@
+USE `myemployees`;
+
 SELECT * FROM `employees` ORDER BY `first_name`;
 
 SELECT MAX(`salary`) AS '最高工资' FROM `employees`;

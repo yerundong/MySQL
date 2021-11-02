@@ -1,3 +1,5 @@
+USE `myemployees`;
+
 #数据排序（将查询结果进行数据排序）
 SELECT * FROM `employees` ORDER BY `first_name` ASC;-- 升序
 

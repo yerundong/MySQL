@@ -1,0 +1,1 @@
+执行本目录下的create_test_db.sql、create_myemployees.sql两个文件，用于测试。

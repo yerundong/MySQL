@@ -1,5 +1,4 @@
-#================= 创建表 =================#
-USE `mydb`
+USE `test_db`
 
 #================= 表的创建 =================#
 CREATE TABLE `pets`(
@@ -76,6 +75,7 @@ SELECT * FROM `pets_copy`
 SELECT * FROM `pets_copy2`
 SELECT * FROM `pets_copy3`
 
+DROP TABLE `pets_copy`;
 DROP TABLE `pets_copy2`;
 DROP TABLE `pets_copy3`;
 

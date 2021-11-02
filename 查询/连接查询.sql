@@ -68,7 +68,7 @@ ON e.`manager_id` = m.`employee_id`
 WHERE m.`first_name` LIKE 's%' AND e.`first_name` LIKE '%l'
 
 #================ 外连接之左外连接 ================#
-USE test;
+USE test_db;
 SELECT u.`user_id`, u.`user_name`, l.`location_name`
 FROM `user` AS u
 LEFT JOIN `location` AS l
