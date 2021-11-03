@@ -17,7 +17,7 @@ CREATE TABLE `noodle` (
   `name` VARCHAR(50)
 );
 
-ALTER TABLE `noodle` CHANGE `name` `name` VARCHAR(50) NOT NULL;
+ALTER TABLE `noodle` MODIFY `name` VARCHAR(50) NOT NULL;
 
 INSERT INTO `noodle` VALUES(
 	NULL
@@ -29,7 +29,7 @@ CREATE TABLE `noodle` (
   `name` VARCHAR(50) NOT NULL
 );
 
-ALTER TABLE `noodle` CHANGE `name` `name` VARCHAR(50) NULL;
+ALTER TABLE `noodle` MODIFY `name` VARCHAR(50);
 
 INSERT INTO `noodle` VALUES(
 	NULL
