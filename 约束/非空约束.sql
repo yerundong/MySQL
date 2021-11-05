@@ -39,3 +39,5 @@ INSERT INTO `noodle` VALUES(
 SELECT * FROM `noodle`;
 
 SHOW INDEX FROM `noodle`;
+
+SELECT DATABASE()
