@@ -62,9 +62,9 @@ SELECT TRUNCATE(12345.123456789, -1);-- 保留到十位
 
 SELECT MOD(99, 2);
 
-SELECT RAND() FROM `employees`;
+SELECT RAND();
 
-SELECT ROUND(RAND() * 99 + 1) FROM `employees`;-- 1~100随机数
+SELECT ROUND(RAND() * 99 + 1);-- 1~100随机数
 
 #=============================== 日期函数 ===============================#
 
@@ -133,31 +133,4 @@ SELECT USER();
 
 SELECT IF(10 > 5, '大', '小');-- if函数
 
-#case第一种用法：充当表达式
-SELECT 
-  `first_name`,
-  CASE
-    `salary` 
-    WHEN 7000 THEN '柒仟'
-    WHEN 8000 THEN '捌仟' 
-    WHEN 9000 THEN '玖仟'
-    WHEN 10000 THEN '壹万' 
-    ELSE `salary` 
-  END 
-  AS '薪水' 
-FROM
-  `employees`;
-  
-#case第二种用法：
-SELECT
-  `first_name`,
-  CASE
-    WHEN `salary` > 10000 
-    THEN '好多钱'
-    WHEN `salary` < 3000 
-    THEN '好少钱' 
-    ELSE `salary` 
-  END AS '薪水' 
-FROM
-  `employees` ;
 
