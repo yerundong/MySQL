@@ -45,9 +45,16 @@ VALUES
 (12, '黄仲铭', 17, 1002);
 
 
+# 创建 login_info 表，测试jdbc
+CREATE TABLE `login_info`(
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `user` VARCHAR(50),
+    `password` VARCHAR(50),
+    `age` INT,
+    `birthday` DATE
+);
 
-DESC `user`;
-
-SHOW INDEX FROM `user`;
-
-SELECT * FROM `user`;
+INSERT INTO `login_info` 
+VALUES
+(DEFAULT, '张三', '123456', 12, '1998-02-01'),
+(DEFAULT, '李四', '456789', 130, '1891-12-16');
