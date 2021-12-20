@@ -1214,20 +1214,20 @@ SHOW CREATE FUNCTION 函数名;
 
 ## 7.2 字符串类型
 
-| 类型       | 大小                  | 用途                   |
-| :--------- | :-------------------- | :--------------------- |
-| CHAR       | 0-255 bytes           | 定长字符串             |
-| VARCHAR    | 0-6,5535 bytes        | 变长字符串             |
-| BINARY     | 0-255 bytes           | 定长二进制字符串       |
-| VARBINARY  | 0-6,5535 bytes        | 变长二进制字符串       |
-| TINYBLOB   | 0-255 bytes           | 二进制字符串           |
-| TINYTEXT   | 0-255 bytes           | 短文本字符串           |
-| BLOB       | 0-6,5535 bytes        | 二进制长文本字符串     |
-| TEXT       | 0-6,5535 bytes        | 长文本字符串           |
-| MEDIUMBLOB | 0-1677,7215 bytes     | 二进制中等长文本字符串 |
-| MEDIUMTEXT | 0-1677,7215 bytes     | 中等长文本字符串       |
-| LONGBLOB   | 0-4 2,9496,7295 bytes | 二进制极长文本字符串   |
-| LONGTEXT   | 0-4 2,9496,7295 bytes | 极长文本字符串         |
+| 类型       | 大小                             | 用途                   |
+| :--------- | :------------------------------- | :--------------------- |
+| CHAR       | 0-255 bytes（最大255B）          | 定长字符串             |
+| VARCHAR    | 0-6,5535 bytes（最大65KB）       | 变长字符串             |
+| BINARY     | 0-255 bytes（最大255B）          | 定长二进制字符串       |
+| VARBINARY  | 0-6,5535 bytes（最大65KB）       | 变长二进制字符串       |
+| TINYBLOB   | 0-255 bytes（最大255B）          | 二进制字符串           |
+| TINYTEXT   | 0-255 bytes（最大255B）          | 短文本字符串           |
+| BLOB       | 0-6,5535 bytes（最大65KB）       | 二进制长文本字符串     |
+| TEXT       | 0-6,5535 bytes（最大65KB）       | 长文本字符串           |
+| MEDIUMBLOB | 0-1677,7215 bytes（最大16MB）    | 二进制中等长文本字符串 |
+| MEDIUMTEXT | 0-1677,7215 bytes（最大16MB）    | 中等长文本字符串       |
+| LONGBLOB   | 0-4 2,9496,7295 bytes（最大4GB） | 二进制极长文本字符串   |
+| LONGTEXT   | 0-4 2,9496,7295 bytes（最大4GB） | 极长文本字符串         |
 
 **CHAR 和 VARCHAR 对比：**
 

@@ -45,8 +45,8 @@ VALUES
 (12, '黄仲铭', 17, 1002);
 
 
-# 创建 login_info 表，测试jdbc
-CREATE TABLE `login_info`(
+# 创建 jdbc_login 表，测试jdbc
+CREATE TABLE `jdbc_login`(
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `user` VARCHAR(50),
     `password` VARCHAR(50),
@@ -54,7 +54,19 @@ CREATE TABLE `login_info`(
     `birthday` DATE
 );
 
-INSERT INTO `login_info` 
+INSERT INTO `jdbc_login` 
 VALUES
 (DEFAULT, '张三', '123456', 12, '1998-02-01'),
 (DEFAULT, '李四', '456789', 130, '1891-12-16');
+
+# 创建 jdbc_blob 表，测试jdbc操作blob数据
+CREATE TABLE `jdbc_blob`(
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `bdata` MEDIUMBLOB
+);
+
+# 创建 jdbc_batch 表，测试jdbc操作批量数据
+CREATE TABLE `jdbc_batch`(
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `bdata` MEDIUMBLOB
+);
