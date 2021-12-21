@@ -45,7 +45,7 @@ VALUES
 (12, '黄仲铭', 17, 1002);
 
 
-# 创建 jdbc_login 表，测试jdbc
+# 创建 jdbc_login 表，测试jdbc基础、登录注入问题
 CREATE TABLE `jdbc_login`(
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `user` VARCHAR(50),
@@ -68,5 +68,16 @@ CREATE TABLE `jdbc_blob`(
 # 创建 jdbc_batch 表，测试jdbc操作批量数据
 CREATE TABLE `jdbc_batch`(
     `id` INT PRIMARY KEY AUTO_INCREMENT,
-    `bdata` MEDIUMBLOB
+    `name` VARCHAR(50)
 );
+
+# 创建 jdbc_trans 表，测试jdbc操作事务
+CREATE TABLE `jdbc_trans`(
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `balance` INT
+);
+
+INSERT INTO `jdbc_trans` 
+VALUES
+(DEFAULT, 1000),
+(DEFAULT, 1000);
