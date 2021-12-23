@@ -81,3 +81,10 @@ INSERT INTO `jdbc_trans`
 VALUES
 (DEFAULT, 1000),
 (DEFAULT, 1000);
+
+# 创建 jdbc_poet 表，测试jdbc DAO
+CREATE TABLE `jdbc_poet`(
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(50),
+    `birthDay` DATE
+);
