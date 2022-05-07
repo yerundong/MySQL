@@ -1,0 +1,1 @@
+若未建库、表，先执行本目录下的lib/create_test_db.sql、lib/create_myemployees.sql两个文件，作为测试库、表。
